@@ -1,0 +1,39 @@
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model categories {
+  id           String     @id @default(uuid())
+  name         String 
+  description  String
+  created_at   DateTime   @default(now())
+  videos       videos[]
+}
+
+model videos {
+  id          String      @id @default(uuid())
+  name        String
+  description String
+  duration    Decimal
+  created_at  DateTime    @default(now())
+  category_id String
+  category    categories  @relation(fields: [category_id], references: [id])
+}
+
+model user {
+  id          String      @id @default(uuid())
+  name        String
+  email       String      @unique
+  password    String
+  admin       Boolean
+  created_at  DateTime    @default(now())
+}
+
+//Após criar o schema.prisma execute o comando ( Mais detalhes na documentação )
+//npx prisma generate --schema ./src/prisma/schema.prisma
